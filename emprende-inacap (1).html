@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INACAP Emprende SPP</title>
+<meta name="application-name" content="INACAP Emprende SPP">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="INACAP Emprende">
+<meta name="theme-color" content="#111111">
+<meta name="description" content="Marketplace de emprendimiento estudiantil INACAP San Pedro de la Paz">
+<link rel="manifest" id="pwa-manifest">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--red:#D62B2B;--red-dark:#A01E1E;--red-light:#F5CECE;--black:#111111;--white:#FFFFFF;--gray:#F4F4F4;--gray2:#E0E0E0;--gray3:#888888;--radius:12px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:#F4F4F4;color:var(--black);min-height:100vh;}
+h1,h2,h3{font-family:'Bebas Neue',sans-serif;letter-spacing:1px;}
+.screen{display:none;min-height:100vh;}
+.screen.active{display:flex;flex-direction:column;}
+
+/* LANDING */
+#screen-landing{background:var(--black);align-items:center;justify-content:center;flex-direction:column;padding:2rem;position:relative;overflow:hidden;}
+#screen-landing::before{content:'';position:absolute;top:-80px;right:-80px;width:360px;height:360px;border-radius:50%;background:var(--red);opacity:0.18;}
+#screen-landing::after{content:'';position:absolute;bottom:-60px;left:-60px;width:260px;height:260px;border-radius:50%;background:var(--red);opacity:0.12;}
+.logo-block{text-align:center;margin-bottom:2.5rem;position:relative;z-index:2;}
+.logo-icon{width:90px;height:90px;border-radius:22px;background:var(--red);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:var(--white);letter-spacing:2px;border:3px solid rgba(255,255,255,0.15);}
+.logo-block h1{font-size:2.8rem;color:var(--white);line-height:1;}
+.logo-block span{color:var(--red);}
+.logo-block p{font-size:0.85rem;color:var(--gray3);margin-top:0.4rem;font-weight:300;letter-spacing:1px;text-transform:uppercase;}
+.badge-free{display:inline-block;background:rgba(214,43,43,0.18);color:var(--red);font-size:0.72rem;font-weight:600;padding:3px 10px;border-radius:20px;margin-top:0.5rem;letter-spacing:1px;text-transform:uppercase;}
+.landing-btns{display:flex;flex-direction:column;gap:1rem;width:100%;max-width:340px;position:relative;z-index:2;}
+.btn{display:block;width:100%;padding:1rem 1.5rem;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;border:none;transition:all 0.18s ease;text-align:center;}
+.btn-red{background:var(--red);color:var(--white);}
+.btn-red:hover{background:var(--red-dark);transform:translateY(-2px);}
+.btn-outline{background:transparent;color:var(--white);border:1.5px solid rgba(255,255,255,0.3);}
+.btn-outline:hover{background:rgba(255,255,255,0.08);}
+.btn-ghost{background:transparent;color:var(--gray3);border:none;font-size:0.85rem;padding:0.5rem;}
+.btn-ghost:hover{color:var(--white);}
+.btn-sm{padding:0.5rem 1rem;font-size:0.8rem;border-radius:8px;width:auto;display:inline-block;}
+.btn-black{background:var(--black);color:var(--white);}
+.btn-black:hover{background:#222;}
+
+/* AUTH */
+#screen-register,#screen-login{background:var(--black);align-items:center;justify-content:center;padding:2rem;}
+.auth-card{background:var(--white);border-radius:18px;padding:2.2rem 2rem;width:100%;max-width:380px;}
+.auth-header{margin-bottom:1.8rem;}
+.auth-header h2{font-size:2rem;color:var(--black);}
+.auth-header p{font-size:0.85rem;color:var(--gray3);margin-top:0.3rem;}
+.inacap-badge{background:var(--red-light);color:var(--red-dark);font-size:0.72rem;font-weight:600;padding:4px 10px;border-radius:20px;display:inline-block;margin-top:0.3rem;}
+.form-group{margin-bottom:1.1rem;}
+.form-group label{display:block;font-size:0.8rem;font-weight:600;color:var(--black);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.5px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:0.75rem 1rem;border:1.5px solid var(--gray2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.9rem;color:var(--black);background:var(--gray);transition:border 0.15s;}
+.form-group textarea{resize:vertical;min-height:70px;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--red);background:var(--white);}
+.form-hint{font-size:0.72rem;color:var(--gray3);margin-top:0.3rem;}
+.auth-footer{margin-top:1.2rem;text-align:center;font-size:0.82rem;color:var(--gray3);}
+.auth-footer a{color:var(--red);cursor:pointer;font-weight:600;text-decoration:none;}
+.back-link{display:flex;align-items:center;gap:6px;color:var(--gray3);font-size:0.82rem;cursor:pointer;margin-bottom:1.2rem;}
+.back-link:hover{color:var(--white);}
+
+/* APP SHELL */
+#screen-app{flex-direction:column;background:#F4F4F4;}
+.topbar{background:var(--black);padding:0.9rem 1.2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.topbar-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--white);}
+.topbar-logo span{color:var(--red);}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;color:var(--white);}
+.cart-btn{position:relative;background:none;border:none;cursor:pointer;padding:4px;}
+.cart-badge{position:absolute;top:-4px;right:-4px;background:var(--red);color:var(--white);border-radius:50%;width:18px;height:18px;font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+
+/* NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--black);display:flex;border-top:1px solid rgba(255,255,255,0.08);z-index:100;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:0.75rem 0.5rem;cursor:pointer;border:none;background:none;color:var(--gray3);font-family:'DM Sans',sans-serif;font-size:0.62rem;transition:color 0.15s;}
+.nav-item.active{color:var(--red);}
+.nav-item svg{width:22px;height:22px;margin-bottom:3px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+
+/* CONTENT */
+.page-content{flex:1;overflow-y:auto;padding:1.2rem;padding-bottom:80px;}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--black);margin-bottom:0.8rem;margin-top:0.5rem;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;margin-bottom:1.2rem;}
+.stat-card{background:var(--white);border-radius:var(--radius);padding:1.1rem;box-shadow:0 2px 10px rgba(0,0,0,0.06);}
+.stat-card.red{background:var(--red);}
+.stat-label{font-size:0.7rem;font-weight:600;color:var(--gray3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;}
+.stat-card.red .stat-label{color:rgba(255,255,255,0.7);}
+.stat-value{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;color:var(--black);}
+.stat-card.red .stat-value{color:var(--white);}
+.stat-sub{font-size:0.7rem;color:var(--gray3);margin-top:0.15rem;}
+.stat-card.red .stat-sub{color:rgba(255,255,255,0.6);}
+.commission-banner{background:var(--black);border-radius:var(--radius);padding:1.1rem 1.2rem;display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;}
+.commission-pct{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:var(--red);min-width:60px;}
+.commission-text p{font-size:0.8rem;color:rgba(255,255,255,0.6);}
+.commission-text strong{color:var(--white);font-size:0.9rem;}
+
+/* MARKETPLACE */
+.search-bar{display:flex;gap:0.7rem;margin-bottom:1.2rem;}
+.search-bar input{flex:1;padding:0.7rem 1rem;border:1.5px solid var(--gray2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.9rem;background:var(--white);}
+.search-bar input:focus{outline:none;border-color:var(--red);}
+.filter-row{display:flex;gap:0.5rem;margin-bottom:1.2rem;overflow-x:auto;padding-bottom:4px;}
+.filter-chip{padding:0.4rem 0.9rem;border-radius:20px;border:1.5px solid var(--gray2);background:var(--white);font-size:0.78rem;font-weight:600;cursor:pointer;white-space:nowrap;color:var(--black);}
+.filter-chip.active{background:var(--black);color:var(--white);border-color:var(--black);}
+.products-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;}
+.product-card{background:var(--white);border-radius:var(--radius);overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.06);}
+.product-img{width:100%;height:110px;display:flex;align-items:center;justify-content:center;font-size:3rem;}
+.product-body{padding:0.8rem;}
+.product-name{font-size:0.88rem;font-weight:600;margin-bottom:0.2rem;line-height:1.3;}
+.product-seller{font-size:0.7rem;color:var(--gray3);margin-bottom:0.5rem;}
+.product-footer{display:flex;align-items:center;justify-content:space-between;}
+.product-price{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--black);}
+.btn-add-cart{background:var(--red);color:var(--white);border:none;border-radius:8px;padding:0.35rem 0.7rem;font-size:0.75rem;font-weight:600;cursor:pointer;}
+.btn-add-cart:hover{background:var(--red-dark);}
+.product-badge{display:inline-block;font-size:0.65rem;font-weight:600;padding:2px 7px;border-radius:20px;margin-bottom:0.4rem;}
+.badge-cat{background:#F4F4F4;color:var(--gray3);}
+
+/* PUBLICAR */
+.publish-card{background:var(--white);border-radius:var(--radius);padding:1.3rem;box-shadow:0 2px 10px rgba(0,0,0,0.06);margin-bottom:1.2rem;}
+.emoji-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0.5rem;margin-bottom:0.5rem;}
+.emoji-opt{padding:0.5rem;border-radius:8px;border:1.5px solid var(--gray2);font-size:1.4rem;text-align:center;cursor:pointer;background:var(--gray);}
+.emoji-opt.selected{border-color:var(--red);background:var(--red-light);}
+.my-products-list{display:flex;flex-direction:column;gap:0.8rem;}
+.my-product-item{background:var(--white);border-radius:10px;padding:1rem;display:flex;gap:0.9rem;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+.my-product-emoji{font-size:2rem;min-width:44px;text-align:center;}
+.my-product-info{flex:1;}
+.my-product-info h4{font-size:0.9rem;font-weight:600;}
+.my-product-info p{font-size:0.75rem;color:var(--gray3);}
+.my-product-price{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--red);}
+.btn-del{background:none;border:none;color:var(--gray3);cursor:pointer;font-size:1rem;padding:4px;}
+.btn-del:hover{color:var(--red);}
+
+/* CARRITO */
+.cart-empty{text-align:center;padding:3rem 1rem;color:var(--gray3);font-size:0.85rem;}
+.cart-item{background:var(--white);border-radius:10px;padding:1rem;display:flex;gap:0.9rem;align-items:center;margin-bottom:0.8rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+.cart-emoji{font-size:2rem;min-width:44px;text-align:center;}
+.cart-info{flex:1;}
+.cart-info h4{font-size:0.9rem;font-weight:600;}
+.cart-info p{font-size:0.72rem;color:var(--gray3);}
+.cart-qty{display:flex;align-items:center;gap:0.5rem;margin-top:0.4rem;}
+.qty-btn{width:26px;height:26px;border-radius:6px;border:1.5px solid var(--gray2);background:var(--gray);cursor:pointer;font-weight:700;font-size:0.9rem;display:flex;align-items:center;justify-content:center;}
+.qty-btn:hover{border-color:var(--red);color:var(--red);}
+.cart-price{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--black);text-align:right;}
+.cart-summary{background:var(--black);border-radius:var(--radius);padding:1.3rem;margin-top:1rem;}
+.cart-summary-row{display:flex;justify-content:space-between;margin-bottom:0.6rem;font-size:0.85rem;color:rgba(255,255,255,0.7);}
+.cart-summary-row.total{font-size:1rem;font-weight:600;color:var(--white);padding-top:0.6rem;border-top:1px solid rgba(255,255,255,0.12);margin-bottom:1rem;}
+.cart-summary-row span:last-child{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;}
+.cart-summary-row.total span:last-child{font-size:1.5rem;color:var(--red);}
+
+/* PEDIDOS */
+.order-item{background:var(--white);border-radius:10px;padding:1rem;margin-bottom:0.8rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+.order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;}
+.order-id{font-size:0.72rem;color:var(--gray3);}
+.order-status{font-size:0.7rem;font-weight:600;padding:3px 9px;border-radius:20px;}
+.status-pending{background:#FFF3CD;color:#856404;}
+.status-done{background:#D1E7DD;color:#0A4D2F;}
+.order-products{font-size:0.82rem;color:var(--black);margin-bottom:0.4rem;}
+.order-total{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--black);}
+.order-commission{font-size:0.72rem;color:var(--red);}
+
+/* FORMALIZACIÓN */
+.formal-hero{background:var(--red);border-radius:var(--radius);padding:1.5rem 1.3rem;margin-bottom:1.2rem;position:relative;overflow:hidden;}
+.formal-hero::after{content:'';position:absolute;right:-30px;bottom:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.08);}
+.formal-hero h2{font-size:1.9rem;color:var(--white);margin-bottom:0.4rem;}
+.formal-hero p{font-size:0.82rem;color:rgba(255,255,255,0.8);}
+.steps-list{display:flex;flex-direction:column;gap:0.8rem;margin-bottom:1.2rem;}
+.step-card{background:var(--white);border-radius:10px;padding:1rem 1.1rem;display:flex;gap:1rem;align-items:flex-start;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+.step-num{min-width:32px;height:32px;border-radius:8px;background:var(--black);color:var(--white);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;}
+.step-info h4{font-size:0.9rem;font-weight:600;margin-bottom:0.2rem;}
+.step-info p{font-size:0.78rem;color:var(--gray3);}
+.link-cards{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;}
+.link-card{background:var(--white);border-radius:10px;padding:1rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.05);cursor:pointer;transition:transform 0.15s;display:block;}
+.link-card:hover{transform:translateY(-2px);}
+.link-card svg{width:28px;height:28px;stroke:var(--red);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;margin:0 auto 0.5rem;display:block;}
+.link-card span{font-size:0.78rem;font-weight:600;color:var(--black);}
+
+/* PERFIL */
+.profile-header{background:var(--black);border-radius:var(--radius);padding:1.5rem 1.2rem;display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;}
+.profile-avatar{width:60px;height:60px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--white);}
+.profile-info h3{font-size:1.4rem;color:var(--white);}
+.profile-info p{font-size:0.78rem;color:rgba(255,255,255,0.5);}
+.profile-section{background:var(--white);border-radius:var(--radius);padding:1.1rem;margin-bottom:0.9rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+.profile-row{display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--gray2);font-size:0.85rem;}
+.profile-row:last-child{border-bottom:none;}
+.profile-row-label{color:var(--gray3);}
+.profile-row-val{font-weight:600;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;display:none;align-items:flex-end;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--white);border-radius:20px 20px 0 0;padding:1.5rem;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;margin-bottom:1.2rem;}
+.modal-close{float:right;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--gray3);}
+
+/* RATINGS */
+.rating-hero{background:var(--black);border-radius:var(--radius);padding:1.5rem 1.3rem;margin-bottom:1.2rem;text-align:center;}
+.rating-hero h2{font-size:1.9rem;color:var(--white);margin-bottom:0.3rem;}
+.rating-hero p{font-size:0.82rem;color:rgba(255,255,255,0.6);}
+.big-stars{display:flex;justify-content:center;gap:0.5rem;margin:1rem 0;}
+.big-star{font-size:2.5rem;cursor:pointer;transition:transform 0.15s;filter:grayscale(1);opacity:0.4;}
+.big-star.active,.big-star:hover{filter:none;opacity:1;transform:scale(1.2);}
+.rating-avg{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--red);line-height:1;}
+.rating-avg-sub{font-size:0.78rem;color:rgba(255,255,255,0.5);}
+.rating-bar-row{display:flex;align-items:center;gap:0.7rem;margin-bottom:0.4rem;}
+.rating-bar-label{font-size:0.75rem;color:rgba(255,255,255,0.6);min-width:14px;text-align:right;}
+.rating-bar-track{flex:1;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;}
+.rating-bar-fill{height:100%;background:var(--red);border-radius:3px;transition:width 0.4s ease;}
+.rating-bar-count{font-size:0.72rem;color:rgba(255,255,255,0.4);min-width:20px;}
+.review-card{background:var(--white);border-radius:var(--radius);padding:1.1rem;margin-bottom:0.8rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+.review-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;}
+.review-user{display:flex;align-items:center;gap:0.6rem;}
+.review-avatar{width:32px;height:32px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#fff;}
+.review-name{font-size:0.85rem;font-weight:600;}
+.review-date{font-size:0.7rem;color:var(--gray3);}
+.review-stars{font-size:0.9rem;letter-spacing:1px;}
+.review-text{font-size:0.82rem;color:var(--black);line-height:1.5;}
+.review-tag{display:inline-block;background:var(--gray);color:var(--gray3);font-size:0.68rem;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:0.5rem;}
+.write-review{background:var(--white);border-radius:var(--radius);padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:1.2rem;}
+.star-selector{display:flex;gap:0.4rem;margin-bottom:0.9rem;}
+.star-sel{font-size:1.8rem;cursor:pointer;filter:grayscale(1);opacity:0.35;transition:all 0.12s;}
+.star-sel.on{filter:none;opacity:1;}
+.category-chips{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.9rem;}
+.cat-chip{padding:0.35rem 0.8rem;border-radius:20px;border:1.5px solid var(--gray2);background:var(--gray);font-size:0.75rem;font-weight:600;cursor:pointer;color:var(--black);}
+.cat-chip.on{background:var(--black);color:var(--white);border-color:var(--black);}
+
+/* UPDATE BANNER */
+.update-banner{display:none;position:fixed;top:0;left:0;right:0;z-index:300;background:var(--red);padding:0.7rem 1rem;align-items:center;justify-content:space-between;gap:0.8rem;}
+.update-banner p{color:#fff;font-size:0.82rem;font-weight:600;}
+.update-banner button{background:#fff;color:var(--red);border:none;border-radius:8px;padding:0.4rem 0.9rem;font-weight:700;font-size:0.78rem;cursor:pointer;white-space:nowrap;}
+
+/* PAYMENT MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:200;display:none;align-items:flex-end;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--white);border-radius:20px 20px 0 0;padding:1.5rem;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;}
+.modal-handle{width:40px;height:4px;background:var(--gray2);border-radius:4px;margin:0 auto 1.2rem;}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--black);margin-bottom:0.3rem;}
+.modal-subtitle{font-size:0.8rem;color:var(--gray3);margin-bottom:1.3rem;}
+.payment-methods{display:flex;flex-direction:column;gap:0.8rem;margin-bottom:1.3rem;}
+.payment-option{border:2px solid var(--gray2);border-radius:12px;padding:1rem;cursor:pointer;display:flex;align-items:center;gap:1rem;transition:all 0.15s;}
+.payment-option:hover{border-color:var(--red);}
+.payment-option.selected{border-color:var(--red);background:var(--red-light);}
+.payment-icon{font-size:1.8rem;min-width:36px;text-align:center;}
+.payment-label{flex:1;}
+.payment-label strong{font-size:0.9rem;display:block;}
+.payment-label span{font-size:0.75rem;color:var(--gray3);}
+.payment-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--gray2);display:flex;align-items:center;justify-content:center;}
+.payment-option.selected .payment-radio{border-color:var(--red);}
+.payment-option.selected .payment-radio::after{content:'';width:9px;height:9px;border-radius:50%;background:var(--red);display:block;}
+.payment-detail{background:var(--gray);border-radius:12px;padding:1rem;margin-bottom:1.2rem;display:none;}
+.payment-detail.show{display:block;}
+.payment-detail label{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--black);display:block;margin-bottom:0.4rem;}
+.payment-detail input{width:100%;padding:0.65rem 0.9rem;border:1.5px solid var(--gray2);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.9rem;margin-bottom:0.8rem;background:var(--white);}
+.payment-detail input:focus{outline:none;border-color:var(--red);}
+.card-row{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;}
+.bank-transfer-info{background:var(--black);border-radius:10px;padding:1rem;color:var(--white);}
+.bank-transfer-info p{font-size:0.8rem;margin-bottom:0.4rem;color:rgba(255,255,255,0.7);}
+.bank-transfer-info strong{font-size:0.85rem;color:var(--white);}
+.bank-transfer-info .bank-row{display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid rgba(255,255,255,0.1);}
+.bank-transfer-info .bank-row:last-child{border-bottom:none;}
+.order-success{text-align:center;padding:1rem 0;}
+.order-success .success-icon{font-size:3.5rem;margin-bottom:0.8rem;}
+.order-success h3{font-size:1.6rem;margin-bottom:0.4rem;}
+.order-success p{font-size:0.85rem;color:var(--gray3);}
+.payment-summary{background:var(--black);border-radius:10px;padding:1rem;margin-bottom:1rem;}
+.pay-sum-row{display:flex;justify-content:space-between;font-size:0.82rem;color:rgba(255,255,255,0.65);margin-bottom:0.4rem;}
+.pay-sum-row.big{font-size:1rem;font-weight:600;color:var(--white);padding-top:0.5rem;border-top:1px solid rgba(255,255,255,0.1);margin-top:0.3rem;}
+.pay-sum-row.big span:last-child{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--red);}
+
+/* TOAST */
+.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--black);color:var(--white);padding:0.75rem 1.5rem;border-radius:30px;font-size:0.82rem;font-weight:600;z-index:999;display:none;animation:fadeInOut 2.5s ease forwards;white-space:nowrap;}
+@keyframes fadeInOut{0%{opacity:0;top:90px}15%{opacity:1;top:80px}80%{opacity:1;top:80px}100%{opacity:0;top:90px}}
+</style>
+</head>
+<body>
+
+<div class="update-banner" id="update-banner">
+  <p>🔄 Nueva versión disponible</p>
+  <button id="btn-update">Actualizar ahora</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- LANDING -->
+<div class="screen active" id="screen-landing">
+  <div class="logo-block">
+    <div class="logo-icon">IE</div>
+    <h1>INACAP<br><span>EMPRENDE SPP</span></h1>
+    <p>San Pedro de la Paz</p>
+    <div class="badge-free">Marketplace Estudiantil · Gratis</div>
+  </div>
+  <div class="landing-btns">
+    <button class="btn btn-red" onclick="goTo('screen-register')">Registrarse Gratis</button>
+    <button class="btn btn-outline" onclick="goTo('screen-login')">Iniciar Sesión</button>
+    <button class="btn btn-ghost" onclick="showToast('Contáctanos: emprende@inacap.cl')">¿Necesitas ayuda?</button>
+    <button class="btn btn-ghost" id="btn-install" style="display:none;color:#fff;border:1px dashed rgba(255,255,255,0.25);border-radius:10px;">📲 Instalar app en mi celular</button>
+    <button class="btn" onclick="abrirModalInstalar()" style="background:rgba(255,255,255,0.08);color:#fff;border:1.5px solid rgba(255,255,255,0.2);margin-top:0.2rem;">📲 ¿Cómo instalar la app?</button>
+  </div>
+</div>
+
+<!-- REGISTRO -->
+<div class="screen" id="screen-register">
+  <div style="background:var(--black);padding:1.2rem 1.5rem;">
+    <div class="back-link" onclick="goTo('screen-landing')">
+      <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Volver
+    </div>
+  </div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:1.5rem;background:var(--black);">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h2>Crear Cuenta</h2>
+        <p>Únete al marketplace INACAP Emprende</p>
+        <div class="inacap-badge">@inacap.cl o @inacapmail.cl</div>
+      </div>
+      <div class="form-group"><label>Nombre Completo</label><input type="text" id="reg-name" placeholder="Ej: María González"/></div>
+      <div class="form-group"><label>Correo Institucional</label><input type="email" id="reg-email" placeholder="usuario@inacap.cl o @inacapmail.cl"/><p class="form-hint">Se acepta correo @inacap.cl o @inacapmail.cl</p></div>
+      <div class="form-group"><label>Carrera</label>
+        <select id="reg-carrera">
+          <option value="">Selecciona tu carrera</option>
+          <option>Ingeniería en Administración</option>
+          <option>Ingeniería en Informática</option>
+          <option>Técnico en Administración</option>
+          <option>Diseño Gráfico</option>
+          <option>Gastronomía Internacional</option>
+          <option>Otra</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Tipo de Emprendimiento</label>
+        <select id="reg-tipo">
+          <option value="">Selecciona tipo</option>
+          <option>Productos artesanales</option>
+          <option>Tecnología / Apps</option>
+          <option>Gastronomía</option>
+          <option>Servicios digitales</option>
+          <option>Moda / Accesorios</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Contraseña</label><input type="password" id="reg-pass" placeholder="Mínimo 8 caracteres"/></div>
+      <button class="btn btn-red" onclick="register()" style="margin-top:0.5rem;">Crear Cuenta Gratis</button>
+      <div class="auth-footer">¿Ya tienes cuenta? <a onclick="goTo('screen-login')">Inicia sesión</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div class="screen" id="screen-login">
+  <div style="background:var(--black);padding:1.2rem 1.5rem;">
+    <div class="back-link" onclick="goTo('screen-landing')">
+      <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Volver
+    </div>
+  </div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:1.5rem;background:var(--black);">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h2>Bienvenido</h2>
+        <p>Ingresa con tu correo INACAP</p>
+        <div class="inacap-badge">@inacap.cl o @inacapmail.cl</div>
+      </div>
+      <div class="form-group"><label>Correo Institucional</label><input type="email" id="login-email" placeholder="usuario@inacap.cl o @inacapmail.cl"/></div>
+      <div class="form-group"><label>Contraseña</label><input type="password" id="login-pass" placeholder="Tu contraseña"/></div>
+      <button class="btn btn-red" onclick="login()" style="margin-top:0.5rem;">Iniciar Sesión</button>
+      <div class="auth-footer">¿No tienes cuenta? <a onclick="goTo('screen-register')">Regístrate gratis</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="screen" id="screen-app">
+  <div class="topbar">
+    <div class="topbar-logo">INACAP <span>EMPRENDE SPP</span></div>
+    <div class="topbar-right">
+      <button class="cart-btn" onclick="switchTab('carrito')">
+        <svg width="24" height="24" viewBox="0 0 24 24" stroke="white" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/></svg>
+        <span class="cart-badge" id="cart-badge" style="display:none;">0</span>
+      </button>
+      <div class="avatar" id="topbar-avatar">?</div>
+    </div>
+  </div>
+
+  <div class="page-content">
+
+    <!-- DASHBOARD -->
+    <div class="tab-panel active" id="tab-dashboard">
+      <div style="margin-bottom:1.2rem;">
+        <h2 id="dash-name" style="font-size:1.7rem;">¡Hola, Emprendedor!</h2>
+        <p style="font-size:0.82rem;color:var(--gray3);">Marketplace · San Pedro de la Paz</p>
+      </div>
+      <div class="commission-banner">
+        <div class="commission-pct">5%</div>
+        <div class="commission-text">
+          <strong>Comisión automática por venta</strong>
+          <p>Se descuenta en cada transacción del marketplace</p>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card red">
+          <div class="stat-label">Mis Ventas</div>
+          <div class="stat-value" id="dash-ventas">$0</div>
+          <div class="stat-sub">Total vendido</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Mi Ganancia</div>
+          <div class="stat-value" id="dash-ganancia">$0</div>
+          <div class="stat-sub">Neto 95%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Productos</div>
+          <div class="stat-value" id="dash-productos">0</div>
+          <div class="stat-sub">Publicados</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pedidos</div>
+          <div class="stat-value" id="dash-pedidos">0</div>
+          <div class="stat-sub">Recibidos</div>
+        </div>
+      </div>
+      <div class="section-title">Accesos Rápidos</div>
+      <div class="link-cards" style="margin-bottom:1.2rem;">
+        <div class="link-card" onclick="switchTab('tienda')" style="text-decoration:none;">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Ir a la Tienda</span>
+        </div>
+        <div class="link-card" onclick="switchTab('publicar')" style="text-decoration:none;">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <span>Publicar Producto</span>
+        </div>
+        <div class="link-card" onclick="switchTab('pedidos')" style="text-decoration:none;">
+          <svg viewBox="0 0 24 24"><path d="M9 12h6M9 16h6M17 21H7a2 2 0 01-2-2V5a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2z"/></svg>
+          <span>Mis Pedidos</span>
+        </div>
+        <div class="link-card" onclick="switchTab('formalizacion')" style="text-decoration:none;">
+          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span>Formalización</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIENDA -->
+    <div class="tab-panel" id="tab-tienda">
+      <div class="section-title">Tienda INACAP Emprende</div>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Buscar productos..." oninput="renderTienda()"/>
+      </div>
+      <div class="filter-row" id="filter-row"></div>
+      <div class="products-grid" id="products-grid">
+        <p style="grid-column:1/-1;text-align:center;color:var(--gray3);padding:2rem;">Aún no hay productos publicados.</p>
+      </div>
+    </div>
+
+    <!-- PUBLICAR -->
+    <div class="tab-panel" id="tab-publicar">
+      <div class="section-title">Publicar Producto</div>
+      <div class="publish-card">
+        <div class="form-group">
+          <label>Ícono del Producto</label>
+          <div class="emoji-grid" id="emoji-grid"></div>
+        </div>
+        <div class="form-group"><label>Nombre del Producto</label><input type="text" id="pub-name" placeholder="Ej: Torta de chocolate"/></div>
+        <div class="form-group"><label>Descripción</label><textarea id="pub-desc" placeholder="Describe tu producto..."></textarea></div>
+        <div class="form-group"><label>Precio (CLP $)</label><input type="number" id="pub-price" placeholder="Ej: 3500" min="0"/></div>
+        <div class="form-group"><label>Categoría</label>
+          <select id="pub-cat">
+            <option>Gastronomía</option>
+            <option>Artesanías</option>
+            <option>Moda</option>
+            <option>Digital</option>
+            <option>Servicios</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Stock disponible</label><input type="number" id="pub-stock" placeholder="Ej: 10" min="1" value="1"/></div>
+        <button class="btn btn-red" onclick="publicarProducto()">Publicar en la Tienda</button>
+      </div>
+
+      <div class="section-title">Mis Productos Publicados</div>
+      <div class="my-products-list" id="my-products-list">
+        <p style="color:var(--gray3);font-size:0.85rem;text-align:center;padding:1rem;">Aún no has publicado productos.</p>
+      </div>
+    </div>
+
+    <!-- CARRITO -->
+    <div class="tab-panel" id="tab-carrito">
+      <div class="section-title">Mi Carrito</div>
+      <div id="cart-list"></div>
+      <div id="cart-checkout"></div>
+    </div>
+
+    <!-- PEDIDOS -->
+    <div class="tab-panel" id="tab-pedidos">
+      <div class="section-title">Mis Pedidos Recibidos</div>
+      <div id="pedidos-list">
+        <p style="color:var(--gray3);font-size:0.85rem;text-align:center;padding:2rem;">Aún no tienes pedidos recibidos.</p>
+      </div>
+    </div>
+
+    <!-- FORMALIZACIÓN -->
+    <div class="tab-panel" id="tab-formalizacion">
+      <div class="formal-hero">
+        <h2>Ayuda a la Formalización</h2>
+        <p>Te guiamos paso a paso para formalizar tu negocio en Chile</p>
+      </div>
+      <div class="section-title">Pasos para Formalizarte</div>
+      <div class="steps-list">
+        <div class="step-card"><div class="step-num">1</div><div class="step-info"><h4>Inscribirse en SII</h4><p>Obtén tu RUT de empresa e inicia actividades en el Servicio de Impuestos Internos.</p></div></div>
+        <div class="step-card"><div class="step-num">2</div><div class="step-info"><h4>Elegir Régimen Tributario</h4><p>Para emprendedores nuevos se recomienda el Régimen Pro Pyme (14D).</p></div></div>
+        <div class="step-card"><div class="step-num">3</div><div class="step-info"><h4>Tu Empresa en un Día</h4><p>Crea tu empresa gratis en tuempresaenundia.cl del Ministerio de Economía de Chile.</p></div></div>
+        <div class="step-card"><div class="step-num">4</div><div class="step-info"><h4>Cuenta RUT / Bancaria</h4><p>Abre una cuenta de empresa para separar tus finanzas personales y del negocio.</p></div></div>
+        <div class="step-card"><div class="step-num">5</div><div class="step-info"><h4>Emitir Boletas Electrónicas</h4><p>Emite boletas directamente desde el portal del SII, sin costo adicional.</p></div></div>
+      </div>
+      <div class="section-title">Links Útiles</div>
+      <div class="link-cards">
+        <a class="link-card" href="https://www.sii.cl" target="_blank" rel="noopener" style="text-decoration:none;">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+          <span>SII Chile</span>
+        </a>
+        <a class="link-card" href="https://www.tuempresaenundia.cl" target="_blank" rel="noopener" style="text-decoration:none;">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Tu Empresa en un Día</span>
+        </a>
+        <a class="link-card" href="https://www.corfo.cl" target="_blank" rel="noopener" style="text-decoration:none;">
+          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+          <span>CORFO</span>
+        </a>
+        <a class="link-card" href="mailto:emprende@inacap.cl" target="_blank" rel="noopener" style="text-decoration:none;">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.5 11a19.79 19.79 0 01-3-8.59A2 2 0 013.46 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.91 7.91a16 16 0 006.27 6.27l.91-.91a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          <span>Asesor INACAP</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- PERFIL -->
+    <div class="tab-panel" id="tab-perfil">
+      <div class="profile-header">
+        <div class="profile-avatar" id="prof-avatar">?</div>
+        <div class="profile-info">
+          <h3 id="prof-name">Emprendedor</h3>
+          <p id="prof-email">usuario@inacap.cl</p>
+        </div>
+      </div>
+      <div class="section-title">Mi Información</div>
+      <div class="profile-section">
+        <div class="profile-row"><span class="profile-row-label">Carrera</span><span class="profile-row-val" id="prof-carrera">—</span></div>
+        <div class="profile-row"><span class="profile-row-label">Tipo de Negocio</span><span class="profile-row-val" id="prof-tipo">—</span></div>
+        <div class="profile-row"><span class="profile-row-label">Sede</span><span class="profile-row-val">San Pedro de la Paz</span></div>
+        <div class="profile-row"><span class="profile-row-label">Estado</span><span class="profile-row-val" style="color:var(--red);">Activo ✓</span></div>
+      </div>
+      <div class="section-title">Mi Desempeño</div>
+      <div class="stats-grid" style="margin-bottom:1.2rem;">
+        <div class="stat-card"><div class="stat-label">Total Vendido</div><div class="stat-value" id="prof-total">$0</div></div>
+        <div class="stat-card red"><div class="stat-label">Mi Ganancia</div><div class="stat-value" id="prof-neto">$0</div></div>
+      </div>
+
+      <div class="section-title">💳 Mis Datos de Pago</div>
+      <div class="profile-section" style="margin-bottom:1rem;">
+        <p style="font-size:0.8rem;color:var(--gray3);margin-bottom:1rem;">Configura cómo quieres recibir los pagos de tus compradores. Estos datos aparecerán cuando alguien compre tus productos.</p>
+        <div class="form-group">
+          <label>Banco</label>
+          <select id="pay-bank">
+            <option value="">Selecciona tu banco</option>
+            <option>Banco de Chile</option>
+            <option>Banco Santander</option>
+            <option>BCI</option>
+            <option>Banco Estado</option>
+            <option>Scotiabank</option>
+            <option>Itaú</option>
+            <option>HSBC</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tipo de Cuenta</label>
+          <select id="pay-account-type">
+            <option value="">Selecciona tipo</option>
+            <option>Cuenta Corriente</option>
+            <option>Cuenta Vista</option>
+            <option>Cuenta RUT</option>
+            <option>Cuenta de Ahorro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Número de Cuenta</label>
+          <input type="text" id="pay-account-num" placeholder="Ej: 00123456789"/>
+        </div>
+        <div class="form-group">
+          <label>RUT</label>
+          <input type="text" id="pay-rut" placeholder="Ej: 12.345.678-9"/>
+        </div>
+        <div class="form-group">
+          <label>Nombre del Titular</label>
+          <input type="text" id="pay-holder" placeholder="Nombre completo"/>
+        </div>
+        <div class="form-group">
+          <label>Email para comprobante</label>
+          <input type="email" id="pay-email-confirm" placeholder="tu@inacap.cl"/>
+        </div>
+        <div class="form-group">
+          <label>Link Mercado Pago (opcional)</label>
+          <input type="text" id="pay-mp-link" placeholder="Ej: mpago.cl/miemprendimiento"/>
+        </div>
+        <button class="btn btn-red btn-sm" onclick="guardarDatosPago()" style="width:100%;margin-top:0.5rem;">Guardar Datos de Pago</button>
+        <div id="pay-config-status" style="display:none;margin-top:0.8rem;background:#D1E7DD;border-radius:8px;padding:0.7rem;font-size:0.8rem;color:#0A4D2F;font-weight:600;text-align:center;">✅ Datos de pago guardados</div>
+      </div>
+
+      <button class="btn" style="background:transparent;border:1.5px solid var(--gray2);color:var(--black);margin-top:0.5rem;" onclick="cerrarSesion()">Cerrar Sesión</button>
+    </div>
+
+    <!-- CALIFICACIONES -->
+    <div class="tab-panel" id="tab-calificaciones">
+
+      <!-- Resumen general -->
+      <div class="rating-hero">
+        <h2>Calificaciones</h2>
+        <p>¿Qué te parece INACAP Emprende SPP?</p>
+        <div class="rating-avg" id="avg-score">—</div>
+        <div style="font-size:1.2rem;margin:0.3rem 0;" id="avg-stars-display">☆☆☆☆☆</div>
+        <div class="rating-avg-sub" id="avg-count">Sin calificaciones aún</div>
+        <div style="margin-top:1rem;" id="rating-bars"></div>
+      </div>
+
+      <!-- Escribir reseña -->
+      <div class="section-title">Calificar la App</div>
+      <div class="write-review">
+        <div class="form-group" style="margin-bottom:0.6rem;">
+          <label>Tu puntuación</label>
+          <div class="star-selector" id="star-selector">
+            <span class="star-sel" data-val="1">⭐</span>
+            <span class="star-sel" data-val="2">⭐</span>
+            <span class="star-sel" data-val="3">⭐</span>
+            <span class="star-sel" data-val="4">⭐</span>
+            <span class="star-sel" data-val="5">⭐</span>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:0.6rem;">
+          <label>¿Qué aspecto calificas?</label>
+          <div class="category-chips" id="review-cats">
+            <div class="cat-chip" data-cat="Facilidad de uso">Facilidad de uso</div>
+            <div class="cat-chip" data-cat="Diseño">Diseño</div>
+            <div class="cat-chip" data-cat="Tienda">Tienda</div>
+            <div class="cat-chip" data-cat="Pagos">Pagos</div>
+            <div class="cat-chip" data-cat="General">General</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Tu comentario</label>
+          <textarea id="review-text" placeholder="Cuéntanos tu experiencia con la app..." style="min-height:80px;"></textarea>
+        </div>
+        <button class="btn btn-red" onclick="enviarResena()">Publicar Reseña</button>
+      </div>
+
+      <!-- Lista de reseñas -->
+      <div class="section-title">Reseñas de la Comunidad</div>
+      <div id="reviews-list">
+        <p style="color:var(--gray3);font-size:0.85rem;text-align:center;padding:2rem;">Sé el primero en calificar la app.</p>
+      </div>
+
+    </div>
+
+  </div><!-- end page-content -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-tab="dashboard" onclick="switchTab('dashboard')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+      Inicio
+    </button>
+    <button class="nav-item" data-tab="tienda" onclick="switchTab('tienda')">
+      <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      Tienda
+    </button>
+    <button class="nav-item" data-tab="publicar" onclick="switchTab('publicar')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Publicar
+    </button>
+    <button class="nav-item" data-tab="calificaciones" onclick="switchTab('calificaciones')">
+      <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Calificar
+    </button>
+    <button class="nav-item" data-tab="perfil" onclick="switchTab('perfil')">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Perfil
+    </button>
+  </nav>
+</div>
+
+<script>
+// ─── STATE ───
+let user = null;
+let cart = [];
+let allProducts = [];
+let pedidos = [];
+let activeFilter = 'Todos';
+let selectedPayment = 'webpay';
+const EMOJIS = ['🍕','🎂','🧁','☕','🍜','👗','👟','🎨','💻','📱','🎵','📚','🧴','🕯️','🌿','🛍️','💎','🎁'];
+let selectedEmoji = '🛍️';
+
+const CATEGORIAS = ['Todos','Gastronomía','Artesanías','Moda','Digital','Servicios','Otro'];
+
+// ─── NAVIGATION ───
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function switchTab(tab){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  const navBtn = document.querySelector('[data-tab="'+tab+'"]');
+  if(navBtn) navBtn.classList.add('active');
+  if(tab==='tienda') renderTienda();
+  if(tab==='carrito') renderCarrito();
+  if(tab==='publicar') renderMyProducts();
+  if(tab==='pedidos') renderPedidos();
+  if(tab==='calificaciones') renderResenas();
+}
+
+// ─── TOAST ───
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.display='block';
+  t.style.animation='none';void t.offsetWidth;
+  t.style.animation='fadeInOut 2.5s ease forwards';
+  setTimeout(()=>{t.style.display='none';},2600);
+}
+
+// ─── AUTH ───
+function register(){
+  const name=document.getElementById('reg-name').value.trim();
+  const email=document.getElementById('reg-email').value.trim().toLowerCase();
+  const carrera=document.getElementById('reg-carrera').value;
+  const tipo=document.getElementById('reg-tipo').value;
+  const pass=document.getElementById('reg-pass').value;
+  if(!name||!email||!carrera||!tipo||!pass){showToast('Completa todos los campos');return;}
+  if(!email.endsWith('@inacap.cl')&&!email.endsWith('@inacapmail.cl')){showToast('Solo se acepta correo @inacap.cl o @inacapmail.cl');return;}
+  if(pass.length<8){showToast('Contraseña mínimo 8 caracteres');return;}
+  user={name,email,carrera,tipo,ventas:0,ganancia:0};
+  enterApp();
+}
+function login(){
+  const email=document.getElementById('login-email').value.trim().toLowerCase();
+  const pass=document.getElementById('login-pass').value;
+  if(!email||!pass){showToast('Ingresa correo y contraseña');return;}
+  if(!email.endsWith('@inacap.cl')&&!email.endsWith('@inacapmail.cl')){showToast('Solo se acepta correo @inacap.cl o @inacapmail.cl');return;}
+  user={name:email.split('@')[0],email,carrera:'Ingeniería en Administración',tipo:'General',ventas:0,ganancia:0};
+  enterApp();
+}
+function enterApp(){
+  const initials=user.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('topbar-avatar').textContent=initials;
+  document.getElementById('dash-name').textContent='¡Hola, '+user.name.split(' ')[0]+'!';
+  document.getElementById('prof-avatar').textContent=initials;
+  document.getElementById('prof-name').textContent=user.name;
+  document.getElementById('prof-email').textContent=user.email;
+  document.getElementById('prof-carrera').textContent=user.carrera;
+  document.getElementById('prof-tipo').textContent=user.tipo;
+  initEmojiGrid();
+  initFilters();
+  addDemoProducts();
+  initRatingUI();
+  // Restaurar productos y pedidos guardados
+  try {
+    const savedProds=localStorage.getItem('ie_products_'+user.email);
+    if(savedProds) {
+      const mine=JSON.parse(savedProds);
+      mine.forEach(p=>{ if(!allProducts.find(x=>x.id===p.id)) allProducts.unshift(p); });
+    }
+    const savedPedidos=localStorage.getItem('ie_pedidos_'+user.email);
+    if(savedPedidos) pedidos=JSON.parse(savedPedidos);
+    const savedStats=localStorage.getItem('ie_stats_'+user.email);
+    if(savedStats) { const s=JSON.parse(savedStats); user.ventas=s.ventas||0; user.ganancia=s.ganancia||0; }
+  } catch(e){}
+  // Guardar sesión activa
+  try { localStorage.setItem('ie_session', JSON.stringify({name:user.name,email:user.email,carrera:user.carrera,tipo:user.tipo})); } catch(e){}
+  goTo('screen-app');
+  switchTab('dashboard');
+  updateStats();
+}
+
+// ─── GUARDAR DATOS ───
+function guardarDatos(){
+  if(!user) return;
+  try {
+    const mine=allProducts.filter(p=>p.sellerId===user.email);
+    localStorage.setItem('ie_products_'+user.email, JSON.stringify(mine));
+    localStorage.setItem('ie_pedidos_'+user.email, JSON.stringify(pedidos));
+    localStorage.setItem('ie_stats_'+user.email, JSON.stringify({ventas:user.ventas,ganancia:user.ganancia}));
+  } catch(e){}
+}
+
+// ─── RESTAURAR SESIÓN AL CARGAR ───
+window.addEventListener('load',()=>{
+  try {
+    const saved=localStorage.getItem('ie_session');
+    if(saved){
+      user=JSON.parse(saved);
+      user.ventas=0; user.ganancia=0;
+      enterApp();
+    }
+  } catch(e){ localStorage.removeItem('ie_session'); }
+});
+
+// ─── DEMO PRODUCTS ───
+function addDemoProducts(){
+  if(allProducts.length>0) return;
+  allProducts=[
+    {id:1,name:'Torta de Chocolate',desc:'Torta artesanal para toda ocasión',price:12000,cat:'Gastronomía',emoji:'🎂',seller:'Ana Torres',stock:5,sellerId:'demo1'},
+    {id:2,name:'Diseño de Logo',desc:'Logo profesional para tu negocio',price:25000,cat:'Digital',emoji:'🎨',seller:'Carlos Muñoz',stock:10,sellerId:'demo2'},
+    {id:3,name:'Polera Bordada',desc:'Polera 100% algodón con bordado personalizado',price:8500,cat:'Moda',emoji:'👗',seller:'Javiera Rojas',stock:8,sellerId:'demo3'},
+    {id:4,name:'Café Artesanal',desc:'Café de especialidad tostado localmente',price:3500,cat:'Gastronomía',emoji:'☕',seller:'Diego Pérez',stock:20,sellerId:'demo4'},
+  ];
+}
+
+// ─── EMOJI GRID ───
+function initEmojiGrid(){
+  const grid=document.getElementById('emoji-grid');
+  grid.innerHTML=EMOJIS.map(e=>`<div class="emoji-opt${e===selectedEmoji?' selected':''}" onclick="selectEmoji('${e}')">${e}</div>`).join('');
+}
+function selectEmoji(e){
+  selectedEmoji=e;
+  document.querySelectorAll('.emoji-opt').forEach(el=>{
+    el.classList.toggle('selected',el.textContent===e);
+  });
+}
+
+// ─── FILTERS ───
+function initFilters(){
+  const row=document.getElementById('filter-row');
+  row.innerHTML=CATEGORIAS.map(c=>`<div class="filter-chip${c===activeFilter?' active':''}" onclick="setFilter('${c}')">${c}</div>`).join('');
+}
+function setFilter(cat){
+  activeFilter=cat;
+  initFilters();
+  renderTienda();
+}
+
+// ─── TIENDA ───
+function renderTienda(){
+  const q=(document.getElementById('search-input')||{}).value||'';
+  const grid=document.getElementById('products-grid');
+  let prods=allProducts.filter(p=>p.sellerId!==user.email);
+  if(activeFilter!=='Todos') prods=prods.filter(p=>p.cat===activeFilter);
+  if(q) prods=prods.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())||p.desc.toLowerCase().includes(q.toLowerCase()));
+  if(prods.length===0){
+    grid.innerHTML='<p style="grid-column:1/-1;text-align:center;color:var(--gray3);padding:2rem;">No se encontraron productos.</p>';
+    return;
+  }
+  grid.innerHTML=prods.map(p=>`
+    <div class="product-card">
+      <div class="product-img" style="background:${catColor(p.cat)}">${p.emoji}</div>
+      <div class="product-body">
+        <div class="product-badge badge-cat">${p.cat}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-seller">por ${p.seller}</div>
+        <div class="product-footer">
+          <div class="product-price">$${fmt(p.price)}</div>
+          <button class="btn-add-cart" onclick="addToCart(${p.id})">+ Agregar</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+function catColor(cat){
+  const m={Gastronomía:'#FFF3E0',Artesanías:'#F3E5F5',Moda:'#FCE4EC',Digital:'#E3F2FD',Servicios:'#E8F5E9',Otro:'#F5F5F5'};
+  return m[cat]||'#F5F5F5';
+}
+
+// ─── CARRITO ───
+function addToCart(id){
+  const prod=allProducts.find(p=>p.id===id);
+  if(!prod) return;
+  const existing=cart.find(c=>c.id===id);
+  if(existing){existing.qty++;}
+  else{cart.push({...prod,qty:1});}
+  updateCartBadge();
+  showToast('¡'+prod.emoji+' '+prod.name+' agregado!');
+}
+function updateCartBadge(){
+  const total=cart.reduce((a,c)=>a+c.qty,0);
+  const badge=document.getElementById('cart-badge');
+  if(total>0){badge.style.display='flex';badge.textContent=total;}
+  else{badge.style.display='none';}
+}
+function changeQty(id,delta){
+  const item=cart.find(c=>c.id===id);
+  if(!item) return;
+  item.qty+=delta;
+  if(item.qty<=0) cart=cart.filter(c=>c.id!==id);
+  updateCartBadge();
+  renderCarrito();
+}
+function renderCarrito(){
+  const list=document.getElementById('cart-list');
+  const checkout=document.getElementById('cart-checkout');
+  if(cart.length===0){
+    list.innerHTML='<div class="cart-empty">🛒<br><br>Tu carrito está vacío.<br>Explora la tienda y agrega productos.</div>';
+    checkout.innerHTML='';
+    return;
+  }
+  list.innerHTML=cart.map(c=>`
+    <div class="cart-item">
+      <div class="cart-emoji">${c.emoji}</div>
+      <div class="cart-info">
+        <h4>${c.name}</h4>
+        <p>por ${c.seller}</p>
+        <div class="cart-qty">
+          <button class="qty-btn" onclick="changeQty(${c.id},-1)">−</button>
+          <span style="font-size:0.9rem;font-weight:600;">${c.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${c.id},1)">+</button>
+        </div>
+      </div>
+      <div class="cart-price">$${fmt(c.price*c.qty)}</div>
+    </div>
+  `).join('');
+  const subtotal=cart.reduce((a,c)=>a+c.price*c.qty,0);
+  const comision=subtotal*0.05;
+  const total=subtotal;
+  checkout.innerHTML=`
+    <div class="cart-summary">
+      <div class="cart-summary-row"><span>Subtotal</span><span>$${fmt(subtotal)}</span></div>
+      <div class="cart-summary-row"><span>Comisión plataforma (5%)</span><span style="color:#FF8A80;">−$${fmt(comision)}</span></div>
+      <div class="cart-summary-row total"><span>Total a pagar</span><span>$${fmt(total)}</span></div>
+      <button class="btn btn-red" onclick="abrirPago()">💳 Elegir Método de Pago</button>
+    </div>
+  `;
+}
+
+// ─── ABRIR MODAL DE PAGO ───
+function abrirPago(){
+  if(cart.length===0) return;
+  const subtotal=cart.reduce((a,c)=>a+c.price*c.qty,0);
+  const comision=subtotal*0.05;
+  document.getElementById('pay-summary').innerHTML=`
+    <div class="pay-sum-row"><span>Subtotal</span><span>$${fmt(subtotal)}</span></div>
+    <div class="pay-sum-row"><span>Comisión INACAP (5%)</span><span style="color:#FF8A80;">$${fmt(comision)}</span></div>
+    <div class="pay-sum-row big"><span>Total</span><span>$${fmt(subtotal)}</span></div>
+  `;
+  document.getElementById('pay-step-1').style.display='block';
+  document.getElementById('pay-step-2').style.display='none';
+  selectPayment('webpay');
+  document.getElementById('payment-modal').classList.add('open');
+}
+function closeModal(){
+  document.getElementById('payment-modal').classList.remove('open');
+  if(document.getElementById('pay-step-2').style.display!=='none'){
+    switchTab('pedidos');
+  }
+}
+function selectPayment(method){
+  selectedPayment=method;
+  ['webpay','transferencia','mercadopago','efectivo'].forEach(m=>{
+    document.getElementById('opt-'+m).classList.toggle('selected',m===method);
+    const det=document.getElementById('detail-'+m);
+    if(det) det.style.display=m===method?'block':'none';
+  });
+}
+function formatCard(el){
+  let v=el.value.replace(/\D/g,'').slice(0,16);
+  el.value=v.replace(/(.{4})/g,'$1 ').trim();
+}
+function formatExp(el){
+  let v=el.value.replace(/\D/g,'').slice(0,4);
+  if(v.length>2) v=v.slice(0,2)+'/'+v.slice(2);
+  el.value=v;
+}
+function procesarPago(){
+  if(selectedPayment==='webpay'){
+    const num=(document.getElementById('card-num').value||'').replace(/\s/g,'');
+    const exp=document.getElementById('card-exp').value;
+    const cvv=document.getElementById('card-cvv').value;
+    const name=(document.getElementById('card-name').value||'').trim();
+    if(num.length<16||!exp||cvv.length<3||!name){showToast('Completa los datos de la tarjeta');return;}
+  }
+  if(selectedPayment==='mercadopago'){
+    const mp=(document.getElementById('mp-email').value||'').trim();
+    if(!mp||!mp.includes('@')){showToast('Ingresa tu email de Mercado Pago');return;}
+  }
+  const subtotal=cart.reduce((a,c)=>a+c.price*c.qty,0);
+  const comision=subtotal*0.05;
+  const methodLabels={webpay:'💳 Webpay / Débito',transferencia:'🏦 Transferencia',mercadopago:'🔵 Mercado Pago',efectivo:'💵 Efectivo / Retiro'};
+  const orderId='#'+Math.floor(Math.random()*9000+1000);
+  pedidos.unshift({
+    id:orderId,
+    productos:cart.map(c=>c.qty+'x '+c.name).join(', '),
+    total:subtotal,comision,neto:subtotal-comision,
+    fecha:new Date().toLocaleDateString('es-CL'),
+    status:'Confirmado',
+    metodo:methodLabels[selectedPayment]
+  });
+  user.ventas+=subtotal;
+  user.ganancia+=(subtotal-comision);
+  cart=[];
+  updateCartBadge();
+  updateStats();
+  document.getElementById('pay-order-id').textContent=orderId;
+  document.getElementById('pay-method-used').textContent=methodLabels[selectedPayment];
+  document.getElementById('pay-total-paid').textContent='$'+fmt(subtotal);
+  const msgs={webpay:'Pago procesado con tu tarjeta.',transferencia:'Envía el comprobante a emprende@inacap.cl',mercadopago:'Recibirás un link de pago en tu correo.',efectivo:'Retira tu pedido en INACAP SPP y paga en efectivo.'};
+  document.getElementById('pay-success-msg').textContent=msgs[selectedPayment];
+  document.getElementById('pay-step-1').style.display='none';
+  document.getElementById('pay-step-2').style.display='block';
+}
+
+// ─── PUBLICAR ───
+function publicarProducto(){
+  const name=document.getElementById('pub-name').value.trim();
+  const desc=document.getElementById('pub-desc').value.trim();
+  const price=parseFloat(document.getElementById('pub-price').value);
+  const cat=document.getElementById('pub-cat').value;
+  const stock=parseInt(document.getElementById('pub-stock').value)||1;
+  if(!name||!desc||!price){showToast('Completa todos los campos');return;}
+  const prod={
+    id:Date.now(),name,desc,price,cat,emoji:selectedEmoji,
+    seller:user.name,stock,sellerId:user.email
+  };
+  allProducts.unshift(prod);
+  document.getElementById('pub-name').value='';
+  document.getElementById('pub-desc').value='';
+  document.getElementById('pub-price').value='';
+  document.getElementById('pub-stock').value='1';
+  updateStats();
+  renderMyProducts();
+  guardarDatos();
+  showToast('✅ ¡Producto publicado en la tienda!');
+}
+function renderMyProducts(){
+  const list=document.getElementById('my-products-list');
+  const mine=allProducts.filter(p=>p.sellerId===user.email);
+  if(mine.length===0){
+    list.innerHTML='<p style="color:var(--gray3);font-size:0.85rem;text-align:center;padding:1rem;">Aún no has publicado productos.</p>';
+    return;
+  }
+  list.innerHTML=mine.map(p=>`
+    <div class="my-product-item">
+      <div class="my-product-emoji">${p.emoji}</div>
+      <div class="my-product-info">
+        <h4>${p.name}</h4>
+        <p>${p.cat} · Stock: ${p.stock}</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="my-product-price">$${fmt(p.price)}</div>
+        <button class="btn-del" onclick="eliminarProducto(${p.id})">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+function eliminarProducto(id){
+  allProducts=allProducts.filter(p=>p.id!==id);
+  renderMyProducts();
+  updateStats();
+  guardarDatos();
+  showToast('Producto eliminado');
+}
+
+// ─── PEDIDOS ───
+function renderPedidos(){
+  const list=document.getElementById('pedidos-list');
+  if(pedidos.length===0){
+    list.innerHTML='<p style="color:var(--gray3);font-size:0.85rem;text-align:center;padding:2rem;">Aún no tienes pedidos.</p>';
+    return;
+  }
+  list.innerHTML=pedidos.map(o=>`
+    <div class="order-item">
+      <div class="order-header">
+        <span class="order-id">Pedido ${o.id} · ${o.fecha}</span>
+        <span class="order-status status-done">${o.status}</span>
+      </div>
+      <div class="order-products">${o.productos}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.4rem;">
+        <div><div class="order-total">$${fmt(o.total)}</div><div class="order-commission">Comisión INACAP (5%): $${fmt(o.comision)}</div></div>
+        <div style="font-size:0.75rem;color:var(--gray3);text-align:right;">${o.metodo||''}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ─── STATS ───
+function updateStats(){
+  const myProds=allProducts.filter(p=>p.sellerId===user.email).length;
+  document.getElementById('dash-ventas').textContent='$'+fmt(user.ventas);
+  document.getElementById('dash-ganancia').textContent='$'+fmt(user.ganancia);
+  document.getElementById('dash-productos').textContent=myProds;
+  document.getElementById('dash-pedidos').textContent=pedidos.length;
+  document.getElementById('prof-total').textContent='$'+fmt(user.ventas);
+  document.getElementById('prof-neto').textContent='$'+fmt(user.ganancia);
+}
+function fmt(n){return Math.round(n).toLocaleString('es-CL');}
+
+function fmt(n){return Math.round(n).toLocaleString('es-CL');}
+
+// ─── CALIFICACIONES ───
+let reviews = [];
+let currentStars = 0;
+let currentCat = 'General';
+
+function initRatingUI(){
+  // Star selector click
+  document.querySelectorAll('.star-sel').forEach(s=>{
+    s.addEventListener('click',()=>{
+      currentStars=parseInt(s.dataset.val);
+      document.querySelectorAll('.star-sel').forEach((el,i)=>{
+        el.classList.toggle('on', i<currentStars);
+      });
+    });
+  });
+  // Category chips
+  document.querySelectorAll('.cat-chip').forEach(c=>{
+    c.addEventListener('click',()=>{
+      document.querySelectorAll('.cat-chip').forEach(x=>x.classList.remove('on'));
+      c.classList.add('on');
+      currentCat=c.dataset.cat;
+    });
+  });
+  // Load saved reviews
+  try {
+    const saved=localStorage.getItem('ie_reviews');
+    if(saved) reviews=JSON.parse(saved);
+  } catch(e){}
+  renderResenas();
+}
+
+function enviarResena(){
+  if(currentStars===0){showToast('Selecciona una puntuación');return;}
+  const text=document.getElementById('review-text').value.trim();
+  if(!text){showToast('Escribe un comentario');return;}
+  // Check if user already reviewed
+  if(reviews.find(r=>r.email===user.email)){
+    showToast('Ya enviaste una reseña. ¡Gracias!');return;
+  }
+  reviews.unshift({
+    name:user.name,
+    email:user.email,
+    stars:currentStars,
+    text,
+    cat:currentCat,
+    date:new Date().toLocaleDateString('es-CL')
+  });
+  try{localStorage.setItem('ie_reviews',JSON.stringify(reviews));}catch(e){}
+  document.getElementById('review-text').value='';
+  currentStars=0;
+  document.querySelectorAll('.star-sel').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.cat-chip').forEach(s=>s.classList.remove('on'));
+  renderResenas();
+  showToast('⭐ ¡Gracias por tu reseña!');
+}
+
+function renderResenas(){
+  // Average
+  const avg = reviews.length ? reviews.reduce((a,r)=>a+r.stars,0)/reviews.length : 0;
+  const avgEl=document.getElementById('avg-score');
+  const avgStarsEl=document.getElementById('avg-stars-display');
+  const avgCountEl=document.getElementById('avg-count');
+  if(avgEl) avgEl.textContent = avg ? avg.toFixed(1) : '—';
+  if(avgStarsEl) avgStarsEl.textContent = starsStr(Math.round(avg));
+  if(avgCountEl) avgCountEl.textContent = reviews.length ? reviews.length+' reseña'+(reviews.length>1?'s':'') : 'Sin calificaciones aún';
+
+  // Bars
+  const barsEl=document.getElementById('rating-bars');
+  if(barsEl){
+    barsEl.innerHTML=[5,4,3,2,1].map(n=>{
+      const count=reviews.filter(r=>r.stars===n).length;
+      const pct=reviews.length ? Math.round(count/reviews.length*100) : 0;
+      return `<div class="rating-bar-row">
+        <span class="rating-bar-label">${n}</span>
+        <div class="rating-bar-track"><div class="rating-bar-fill" style="width:${pct}%"></div></div>
+        <span class="rating-bar-count">${count}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // List
+  const listEl=document.getElementById('reviews-list');
+  if(!listEl) return;
+  if(reviews.length===0){
+    listEl.innerHTML='<p style="color:var(--gray3);font-size:0.85rem;text-align:center;padding:2rem;">Sé el primero en calificar la app.</p>';
+    return;
+  }
+  listEl.innerHTML=reviews.map(r=>`
+    <div class="review-card">
+      <div class="review-header">
+        <div class="review-user">
+          <div class="review-avatar">${r.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}</div>
+          <div>
+            <div class="review-name">${r.name}</div>
+            <div class="review-date">${r.date}</div>
+          </div>
+        </div>
+        <div class="review-stars">${starsStr(r.stars)}</div>
+      </div>
+      <div class="review-text">${r.text}</div>
+      <div class="review-tag">${r.cat}</div>
+    </div>
+  `).join('');
+}
+
+function starsStr(n){
+  return '⭐'.repeat(Math.max(0,Math.min(5,n)))+'☆'.repeat(Math.max(0,5-Math.min(5,n)));
+}
+
+function cerrarSesion(){
+  user=null;cart=[];allProducts=[];pedidos=[];
+  try{localStorage.removeItem('ie_session');}catch(e){}
+  goTo('screen-landing');showToast('Sesión cerrada');
+}
+
+// ─── PWA ───
+const manifestData={name:"INACAP Emprende SPP",short_name:"INACAP Emprende",start_url:".",display:"standalone",orientation:"portrait",background_color:"#111111",theme_color:"#111111",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='38' fill='%23D62B2B'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial Black' font-size='90' fill='white'%3EIE%3C/text%3E%3C/svg%3E",sizes:"192x192",type:"image/svg+xml"}]};
+const mblob=new Blob([JSON.stringify(manifestData)],{type:'application/json'});
+document.getElementById('pwa-manifest').setAttribute('href',URL.createObjectURL(mblob));
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPrompt=e;
+  const btn=document.getElementById('btn-install');if(btn) btn.style.display='block';
+  if(btn) btn.addEventListener('click',async()=>{
+    btn.style.display='none';deferredPrompt.prompt();
+    const{outcome}=await deferredPrompt.userChoice;
+    if(outcome==='accepted')showToast('¡App instalada!');
+    deferredPrompt=null;
+  });
+});
+
+// ─── SERVICE WORKER CON AUTO-ACTUALIZACIÓN ───
+if('serviceWorker' in navigator){
+  // El SW se registra como archivo externo en Netlify (sw.js)
+  // Aquí lo creamos inline como blob para funcionar desde archivo HTML también
+  const swCode=`
+    const CACHE_NAME='inacap-emprende-v4';
+    const ASSETS=['/'];
+    self.addEventListener('install',e=>{
+      e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS)));
+      self.skipWaiting(); // activa el nuevo SW de inmediato
+    });
+    self.addEventListener('activate',e=>{
+      e.waitUntil(
+        caches.keys().then(keys=>Promise.all(
+          keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k)) // borra versiones viejas
+        ))
+      );
+      self.clients.claim(); // toma control de todas las pestañas abiertas
+    });
+    self.addEventListener('fetch',e=>{
+      e.respondWith(
+        fetch(e.request).then(res=>{
+          const clone=res.clone();
+          caches.open(CACHE_NAME).then(c=>c.put(e.request,clone));
+          return res;
+        }).catch(()=>caches.match(e.request)) // si no hay red, usa caché
+      );
+    });
+    // Escucha mensajes para forzar actualización
+    self.addEventListener('message',e=>{
+      if(e.data==='skipWaiting') self.skipWaiting();
+    });
+  `;
+  const swBlob=new Blob([swCode],{type:'application/javascript'});
+  const swURL=URL.createObjectURL(swBlob);
+  navigator.serviceWorker.register(swURL).then(reg=>{
+    // Revisa actualizaciones cada vez que se abre la app
+    reg.update();
+    // Si hay un nuevo SW esperando, muestra banner de actualización
+    reg.addEventListener('updatefound',()=>{
+      const newSW=reg.installing;
+      newSW.addEventListener('statechange',()=>{
+        if(newSW.state==='installed'&&navigator.serviceWorker.controller){
+          mostrarBannerActualizacion(newSW);
+        }
+      });
+    });
+  }).catch(()=>{});
+  // Recarga automática cuando el nuevo SW toma control
+  let refreshing=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(!refreshing){ refreshing=true; window.location.reload(); }
+  });
+}
+
+function mostrarBannerActualizacion(newSW){
+  const banner=document.getElementById('update-banner');
+  if(banner){
+    banner.style.display='flex';
+    document.getElementById('btn-update').onclick=()=>{
+      newSW.postMessage('skipWaiting');
+      banner.style.display='none';
+    };
+  }
+}
+
+// Close modals clicking outside
+document.addEventListener('DOMContentLoaded',()=>{
+  const overlay=document.getElementById('payment-modal');
+  if(overlay) overlay.addEventListener('click',function(e){if(e.target===this)closeModal();});
+  const ioverlay=document.getElementById('install-modal');
+  if(ioverlay) ioverlay.addEventListener('click',function(e){if(e.target===this)cerrarModalInstalar();});
+});
+
+function abrirModalInstalar(){
+  document.getElementById('install-modal').classList.add('open');
+}
+function cerrarModalInstalar(){
+  document.getElementById('install-modal').classList.remove('open');
+}
+</script>
+
+<!-- INSTALL MODAL -->
+<div class="modal-overlay" id="install-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📲 Instalar App</div>
+    <div class="modal-subtitle">Sigue los pasos según tu celular</div>
+
+    <div style="background:#F4F4F4;border-radius:12px;padding:1rem;margin-bottom:1rem;">
+      <div style="display:flex;align-items:center;gap:0.7rem;margin-bottom:0.8rem;">
+        <span style="font-size:1.5rem;">🤖</span>
+        <strong style="font-size:0.95rem;">Android (Chrome)</strong>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.5rem;">
+        <div style="display:flex;gap:0.8rem;align-items:flex-start;font-size:0.82rem;">
+          <span style="background:var(--red);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.7rem;flex-shrink:0;">1</span>
+          <span>Abre el link de la app en <strong>Chrome</strong></span>
+        </div>
+        <div style="display:flex;gap:0.8rem;align-items:flex-start;font-size:0.82rem;">
+          <span style="background:var(--red);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.7rem;flex-shrink:0;">2</span>
+          <span>Toca los <strong>3 puntos ⋮</strong> arriba a la derecha</span>
+        </div>
+        <div style="display:flex;gap:0.8rem;align-items:flex-start;font-size:0.82rem;">
+          <span style="background:var(--red);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.7rem;flex-shrink:0;">3</span>
+          <span>Selecciona <strong>"Añadir a pantalla de inicio"</strong></span>
+        </div>
+        <div style="display:flex;gap:0.8rem;align-items:flex-start;font-size:0.82rem;">
+          <span style="background:var(--red);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.7rem;flex-shrink:0;">4</span>
+          <span>Toca <strong>"Agregar"</strong> y listo ✅</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#F4F4F4;border-radius:12px;padding:1rem;margin-bottom:1.2rem;">
+      <div style="display:flex;align-items:center;gap:0.7rem;margin-bottom:0.8rem;">
+        <span style="font-size:1.5rem;">🍎</span>
+        <strong style="font-size:0.95rem;">iPhone (Safari)</strong>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.5rem;">
+        <div style="display:flex;gap:0.8rem;align-items:flex-start;font-size:0.82rem;">
+          <span style="background:var(--black);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.7rem;flex-shrink:0;">1</span>
+          <span>Abre el link en <strong>Safari</strong> (no Chrome)</span>
+        </div>
+        <div style="display:flex;gap:0.8rem;align-items:flex-start;font-size:0.82rem;">
+          <span style="background:var(--black);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.7rem;flex-shrink:0;">2</span>
+          <span>Toca el ícono de <strong>compartir 􀈂</strong> (abajo al centro)</span>
+        </div>
+        <div style="display:flex;gap:0.8rem;align-items:flex-start;font-size:0.82rem;">
+          <span style="background:var(--black);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.7rem;flex-shrink:0;">3</span>
+          <span>Selecciona <strong>"Agregar a pantalla de inicio"</strong></span>
+        </div>
+        <div style="display:flex;gap:0.8rem;align-items:flex-start;font-size:0.82rem;">
+          <span style="background:var(--black);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.7rem;flex-shrink:0;">4</span>
+          <span>Toca <strong>"Agregar"</strong> y listo ✅</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--black);border-radius:12px;padding:1rem;margin-bottom:1.2rem;text-align:center;">
+      <p style="color:rgba(255,255,255,0.6);font-size:0.78rem;margin-bottom:0.4rem;">Link de la app (súbela primero a Netlify)</p>
+      <p style="color:var(--red);font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;">emprendeinacap-spp.netlify.app</p>
+    </div>
+
+    <button class="btn btn-red" onclick="cerrarModalInstalar()">Entendido</button>
+  </div>
+</div>
+
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="payment-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <!-- STEP 1 -->
+    <div id="pay-step-1">
+      <div class="modal-title">Método de Pago</div>
+      <div class="modal-subtitle">Elige cómo quieres pagar tu pedido</div>
+      <div class="payment-summary" id="pay-summary"></div>
+      <div class="payment-methods">
+        <div class="payment-option selected" onclick="selectPayment('webpay')" id="opt-webpay">
+          <div class="payment-icon">💳</div>
+          <div class="payment-label"><strong>Webpay / Débito</strong><span>Tarjeta de crédito o débito</span></div>
+          <div class="payment-radio"></div>
+        </div>
+        <div class="payment-option" onclick="selectPayment('transferencia')" id="opt-transferencia">
+          <div class="payment-icon">🏦</div>
+          <div class="payment-label"><strong>Transferencia Bancaria</strong><span>Banco de Chile, Santander, BCI, etc.</span></div>
+          <div class="payment-radio"></div>
+        </div>
+        <div class="payment-option" onclick="selectPayment('mercadopago')" id="opt-mercadopago">
+          <div class="payment-icon">🔵</div>
+          <div class="payment-label"><strong>Mercado Pago</strong><span>Paga con tu cuenta Mercado Pago</span></div>
+          <div class="payment-radio"></div>
+        </div>
+        <div class="payment-option" onclick="selectPayment('efectivo')" id="opt-efectivo">
+          <div class="payment-icon">💵</div>
+          <div class="payment-label"><strong>Efectivo / Retiro</strong><span>Paga al retirar en INACAP SPP</span></div>
+          <div class="payment-radio"></div>
+        </div>
+      </div>
+      <!-- Webpay -->
+      <div class="payment-detail show" id="detail-webpay">
+        <label>Número de Tarjeta</label>
+        <input type="text" placeholder="1234 5678 9012 3456" maxlength="19" id="card-num" oninput="formatCard(this)"/>
+        <div class="card-row">
+          <div><label>Vencimiento</label><input type="text" placeholder="MM/AA" maxlength="5" id="card-exp" oninput="formatExp(this)"/></div>
+          <div><label>CVV</label><input type="text" placeholder="123" maxlength="3" id="card-cvv"/></div>
+        </div>
+        <label>Nombre en la tarjeta</label>
+        <input type="text" placeholder="Nombre Apellido" id="card-name"/>
+      </div>
+      <!-- Transferencia -->
+      <div class="payment-detail" id="detail-transferencia" style="display:none;">
+        <div class="bank-transfer-info">
+          <p style="font-weight:600;color:var(--white);margin-bottom:0.8rem;">Datos para transferencia:</p>
+          <div class="bank-row"><span>Banco</span><strong>Banco de Chile</strong></div>
+          <div class="bank-row"><span>Titular</span><strong>INACAP Emprende SPP</strong></div>
+          <div class="bank-row"><span>RUT</span><strong>76.123.456-7</strong></div>
+          <div class="bank-row"><span>Cta. Corriente</span><strong>00123456789</strong></div>
+          <div class="bank-row"><span>Email</span><strong>emprende@inacap.cl</strong></div>
+        </div>
+        <p style="font-size:0.75rem;color:var(--gray3);margin-top:0.7rem;">Envía el comprobante a emprende@inacap.cl con tu nombre y número de pedido.</p>
+      </div>
+      <!-- Mercado Pago -->
+      <div class="payment-detail" id="detail-mercadopago" style="display:none;">
+        <label>Email de Mercado Pago</label>
+        <input type="email" placeholder="tu@email.com" id="mp-email"/>
+        <p style="font-size:0.75rem;color:var(--gray3);">Recibirás un link de pago en tu correo de Mercado Pago.</p>
+      </div>
+      <!-- Efectivo -->
+      <div class="payment-detail" id="detail-efectivo" style="display:none;">
+        <div class="bank-transfer-info">
+          <p style="font-weight:600;color:var(--white);margin-bottom:0.8rem;">📍 Punto de retiro:</p>
+          <div class="bank-row"><span>Lugar</span><strong>Dirección de Estudios</strong></div>
+          <div class="bank-row"><span>Horario</span><strong>Lunes–Viernes 9–18hrs</strong></div>
+          <div class="bank-row"><span>Sede</span><strong>INACAP San Pedro de la Paz</strong></div>
+        </div>
+        <p style="font-size:0.75rem;color:var(--gray3);margin-top:0.7rem;">Presenta tu número de pedido al momento del retiro y paga en efectivo.</p>
+      </div>
+      <button class="btn btn-red" style="margin-top:0.5rem;" onclick="procesarPago()">Confirmar Pago</button>
+      <button class="btn" style="background:transparent;border:1.5px solid var(--gray2);color:var(--black);margin-top:0.7rem;" onclick="closeModal()">Cancelar</button>
+    </div>
+    <!-- STEP 2: Success -->
+    <div id="pay-step-2" style="display:none;">
+      <div class="order-success">
+        <div class="success-icon">✅</div>
+        <h3>¡Pedido Confirmado!</h3>
+        <p id="pay-success-msg"></p>
+        <div style="background:var(--gray);border-radius:12px;padding:1rem;margin:1rem 0;text-align:left;">
+          <div class="pay-sum-row"><span>Número de pedido</span><span id="pay-order-id" style="font-weight:700;color:var(--black);"></span></div>
+          <div class="pay-sum-row"><span>Método de pago</span><span id="pay-method-used" style="font-weight:600;color:var(--black);"></span></div>
+          <div class="pay-sum-row"><span>Total pagado</span><span id="pay-total-paid" style="font-weight:700;color:var(--red);"></span></div>
+        </div>
+        <button class="btn btn-red" onclick="closeModal()">Ver mis Pedidos</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
